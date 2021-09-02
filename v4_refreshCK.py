@@ -20,7 +20,7 @@ def wstopt(wskey):
         }
         data = {"wskey": wskey, "key": "xb3z4z2m3n847"}
         r = requests.post(url, headers=headers, data=json.dumps(data), verify=False)
-        return r.text
+        return r
     except:
         return "error"
 
@@ -32,20 +32,25 @@ if __name__ == '__main__':
         for ii in wskeys:
             if pin in ii:
                 try:
-                    ptck = wstopt(ii)
-                    if ptck == "wskey错误":
-                        print("有一个wskey可能过期了,%s" % pin)
-                    elif ptck == "未知错误" or ptck == "error":
-                        print("有一个wskey发生了未知错误,%s" % pin)
-                    elif "</html>" in ptck:
-                        print("你的ip被cloudflare拦截")
+                    r = wstopt(ii)
+                    ptck = r.text
+                    if r.status_code == 429:
+                        print("您的ip请求api过于频繁，已被流控")
+                        exit()
                     else:
-                        with open('/jd/config/config.sh', '+r') as f:
-                            t = f.read()
-                            t = t.replace(i, ptck)
-                            f.seek(0, 0)
-                            f.write(t)
-                            f.truncate()
-                        print(pin + "更新成功！")
+                        if ptck == "wskey错误":
+                            print("有一个wskey可能过期了,%s" % pin)
+                        elif ptck == "未知错误" or ptck == "error":
+                            print("有一个wskey发生了未知错误,%s" % pin)
+                        elif "</html>" in ptck:
+                            print("你的ip被cloudflare拦截")
+                        else:
+                            with open('/jd/config/config.sh', '+r') as f:
+                                t = f.read()
+                                t = t.replace(i, ptck)
+                                f.seek(0, 0)
+                                f.write(t)
+                                f.truncate()
+                            print(pin + "更新成功！")
                 except:
                     print("发生了未知错误")
