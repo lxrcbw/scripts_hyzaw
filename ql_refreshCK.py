@@ -1,6 +1,6 @@
-# 在这里输入青龙面板用户名密码，如果不填写，就自动从auth.json中读取
-username = ""
-password = ""
+"""
+new Env('青龙全自动更新cookie');
+"""
 
 import requests
 import time
@@ -10,6 +10,8 @@ import re
 requests.packages.urllib3.disable_warnings()
 
 token = ""
+username = ""
+password = ""
 if username == "" or password == "":
     f = open("/ql/config/auth.json")
     auth = f.read()
