@@ -111,6 +111,8 @@ if __name__ == '__main__':
                     print("第%s个wskey可能过期了,pin为%s" % (count, wspin))
                 elif ptck == "未知错误" or ptck == "error":
                     print("第%s个wskey发生了未知错误,pin为%s" % (count, wspin))
+                elif "</html>" in ptck:
+                    print("你的ip被cloudflare拦截")
                 else:
                     ptpin = re.findall(r"pt_pin=(.*?);", ptck)[0]
                     item = getckitem("pt_pin=" + ptpin)
